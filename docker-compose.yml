@@ -1,0 +1,50 @@
+version: '2'
+services:
+  data:
+    container_name: humanity_challenge_data
+    build: ./docker/data
+    volumes:
+      - .:/www
+    command: /var/local/entrypoint.sh
+  php:
+    container_name: humanity_challenge_php
+    build: ./docker/php
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+    volumes_from:
+      - data
+    command: /var/local/entrypoint.sh
+  mariadb:
+    container_name: humanity_challenge_mariadb
+    build: ./docker/mariadb
+    volumes:
+      - ./docker/mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=humanity
+    ports:
+      - "3306:3306"
+    restart: always
+  phpmyadmin:
+    container_name: humanity_challenge_phpmyadmin
+    build: ./docker/phpmyadmin
+    ports:
+      - "8001:80"
+    links:
+      - mariadb:db
+    depends_on:
+      - mariadb
+    restart: always
+  nginx:
+    container_name: humanity_challenge_nginx
+    build:
+      context: ./docker/nginx
+    ports:
+      - "80:80"
+    links:
+      - php
+    volumes_from:
+      - php
+      - data

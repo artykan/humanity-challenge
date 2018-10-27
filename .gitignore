@@ -1,0 +1,9 @@
+.idea
+/.web-server-pid
+/build/
+/config/*
+!/config/*.example.php
+/phpunit.xml
+/vendor/
+/web/bundles/
+.docker_data
