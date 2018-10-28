@@ -2,12 +2,15 @@
 
 namespace Http\Controllers;
 
-class VacationsController
+use Models\Vacation;
+
+class RequestsController
 {
     public function index()
     {
-        var_dump('index');
-        die;
+        $vacation = new Vacation;
+        $vacations = $vacation->all();
+        return json_encode($vacations);
     }
 
     public function store()
