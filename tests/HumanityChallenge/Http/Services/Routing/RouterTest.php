@@ -17,7 +17,7 @@ class RouterTest extends TestCase
     public function testReturnsExceptionIfRequestIsEmpty()
     {
         $this->expectException(\Exception::class);
-        new Router(new Request);
+        new Router(Request::getInstance());
     }
 
     /**
@@ -25,7 +25,7 @@ class RouterTest extends TestCase
      */
     public function testDetectsControllerClassAndMethodCorrectly()
     {
-        $request = new Request;
+        $request = Request::getInstance();
 
         $request->requestUri = '/users/5';
         $request->requestMethod = 'PATCH';
