@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 27, 2018 at 10:11 AM
+-- Generation Time: Oct 29, 2018 at 09:01 AM
 -- Server version: 10.3.10-MariaDB-1:10.3.10+maria~bionic
 -- PHP Version: 7.2.8
 
@@ -30,15 +30,17 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `email` varchar(255) NOT NULL
+  `email` varchar(255) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`) VALUES
-(1, 'artem.kanunnykov@gmail.com');
+INSERT INTO `users` (`id`, `email`, `is_admin`) VALUES
+(1, 'admin@humanity.challenge.docker', 1),
+(2, 'user@humanity.challenge.docker', 0);
 
 --
 -- Indexes for dumped tables
@@ -58,7 +60,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

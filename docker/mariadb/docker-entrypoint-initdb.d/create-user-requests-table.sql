@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Oct 27, 2018 at 11:00 AM
+-- Generation Time: Oct 29, 2018 at 10:50 AM
 -- Server version: 10.3.10-MariaDB-1:10.3.10+maria~bionic
 -- PHP Version: 7.2.8
 
@@ -33,7 +33,7 @@ CREATE TABLE `user_requests` (
   `user_id` int(11) NOT NULL,
   `date_start` date NOT NULL,
   `date_end` date NOT NULL,
-  `status_id` enum('approved','rejected','pending') CHARACTER SET utf8mb4 NOT NULL
+  `status` enum('approved','rejected','pending') CHARACTER SET utf8mb4 NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
