@@ -2,41 +2,87 @@
 
 namespace Http\Controllers;
 
-use Models\Vacation;
+use Http\Services\Auth\CurrentUser;
+use Models\Request;
+use Http\Services\Request\Request as HttpRequest;
 
-class RequestsController
+class RequestsController extends Controller
 {
     public function index()
     {
-        $vacation = new Vacation;
-        $vacations = $vacation->all();
-        return json_encode($vacations);
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $requests = $request->allByUserId($currentUser::$id);
+        return json_encode($requests);
     }
 
     public function store()
     {
-        var_dump('store');
-        die;
+        $httpRequest = HttpRequest::getInstance();
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $request->user_id = $currentUser::$id;
+        $request->date_start = $httpRequest->data['date_start'];
+        $request->date_end = $httpRequest->data['date_end'];
+        $requestId = $request->save();
+        return json_encode($requestId);
     }
 
-    public function update($id)
+    public function update(int $id)
     {
-        var_dump('update');
-        var_dump($id);
-        die;
+        $httpRequest = HttpRequest::getInstance();
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $request = $request->getById($id);
+        if ($request->user_id != $currentUser::$id) {
+            throw new \Exception('Permission denied');
+        }
+        if (!empty($httpRequest->data['date_start'])) {
+            $request->date_start = $httpRequest->data['date_start'];
+        }
+        if (!empty($httpRequest->data['date_end'])) {
+            $request->date_end = $httpRequest->data['date_end'];
+        }
+        $request->status = 'pending';
+        $request = $request->save();
+        return json_encode($request);
     }
 
     public function destroy($id)
     {
-        var_dump('destroy');
-        var_dump($id);
-        die;
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $request = $request->getById($id);
+        if ($request->user_id != $currentUser::$id) {
+            throw new \Exception('Permission denied');
+        }
+        $request->delete();
+        return json_encode(true);
     }
 
-    public function export($type = 'csv')
+    public function approve($id)
     {
-        var_dump('export');
-        var_dump($type);
-        die;
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $request = $request->getById($id);
+        if (!$currentUser::$is_admin) {
+            throw new \Exception('Permission denied');
+        }
+        $request->status = 'approved';
+        $request = $request->save();
+        return json_encode($request);
+    }
+
+    public function reject($id)
+    {
+        $currentUser = CurrentUser::getInstance();
+        $request = new Request;
+        $request = $request->getById($id);
+        if (!$currentUser::$is_admin) {
+            throw new \Exception('Permission denied');
+        }
+        $request->status = 'rejected';
+        $request = $request->save();
+        return json_encode($request);
     }
 }
