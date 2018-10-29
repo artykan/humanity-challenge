@@ -3,6 +3,7 @@
 namespace Http\Services\Routing;
 
 use Helpers\Text;
+use Http\Services\Auth\Authentication;
 use Http\Services\Request\RequestInterface;
 
 class Router implements RouterInterface
@@ -140,7 +141,7 @@ class Router implements RouterInterface
         }
 
         return call_user_func_array(
-            [new $controller['class_name_full'], $controller['class_method']],
+            [new $controller['class_name_full'](new Authentication($this->request)), $controller['class_method']],
             $this->parseArgs()
         );
     }
