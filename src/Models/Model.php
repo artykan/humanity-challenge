@@ -14,6 +14,15 @@ class Model
         $this->dbh = new \PDO($dsn, \Config::get('MYSQL_USER'), \Config::get('MYSQL_PASSWORD'));
     }
 
+    public function all()
+    {
+        $sql = 'SELECT * FROM ' . static::TABLE_NAME . ' WHERE 1 = 1';
+        $sth = $this->dbh->prepare($sql);
+        $sth->execute();
+        $items = $sth->fetchAll(\PDO::FETCH_CLASS, static::class);
+        return $items;
+    }
+
     public function getById(int $id)
     {
         $sql = 'SELECT * FROM ' . static::TABLE_NAME . ' WHERE id = :id';

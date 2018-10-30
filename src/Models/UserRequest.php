@@ -2,7 +2,7 @@
 
 namespace Models;
 
-class Request extends Model
+class UserRequest extends Model
 {
     const TABLE_NAME = 'user_requests';
 
@@ -17,8 +17,8 @@ class Request extends Model
         $sql = 'SELECT * FROM ' . self::TABLE_NAME . ' WHERE user_id = :user_id';
         $sth = $this->dbh->prepare($sql);
         $sth->execute([':user_id' => $userId]);
-        $requests = $sth->fetchAll(\PDO::FETCH_CLASS, Request::class);
-        return $requests;
+        $items = $sth->fetchAll(\PDO::FETCH_CLASS, self::class);
+        return $items;
     }
 
     public function save()
