@@ -2,6 +2,7 @@
 
 namespace Http\Controllers;
 
+use Http\Requests\RequestsRequest;
 use Http\Services\Auth\CurrentUser;
 use Models\Request;
 use Http\Services\Request\Request as HttpRequest;
@@ -16,7 +17,7 @@ class RequestsController extends Controller
         return json_encode($requests);
     }
 
-    public function store()
+    public function store(RequestsRequest)
     {
         $httpRequest = HttpRequest::getInstance();
         $currentUser = CurrentUser::getInstance();
