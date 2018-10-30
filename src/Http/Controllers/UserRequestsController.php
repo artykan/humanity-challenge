@@ -2,88 +2,100 @@
 
 namespace Http\Controllers;
 
-use Http\Requests\RequestsRequest;
+use Http\Requests\StoreUserRequest;
+use Http\Requests\UpdateUserRequest;
 use Http\Services\Auth\CurrentUser;
-use Models\Request;
-use Http\Services\Request\Request as HttpRequest;
+use Models\UserRequest;
 
-class RequestsController extends Controller
+class UserRequestsController extends Controller
 {
     public function index()
     {
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $requests = $request->allByUserId($currentUser::$id);
-        return json_encode($requests);
+
+        $userRequest = new UserRequest;
+
+        if ($currentUser::$is_admin) {
+            $userRequests = $userRequest->all();
+        } else {
+            $userRequests = $userRequest->allByUserId($currentUser::$id);
+        }
+
+        return json_encode($userRequests);
     }
 
-    public function store(RequestsRequest)
+    public function store(StoreUserRequest $request)
     {
-        $httpRequest = HttpRequest::getInstance();
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $request->user_id = $currentUser::$id;
-        $request->date_start = $httpRequest->data['date_start'];
-        $request->date_end = $httpRequest->data['date_end'];
-        $requestId = $request->save();
+
+        $userRequest = new UserRequest;
+        $userRequest->user_id = $currentUser::$id;
+        $userRequest->date_start = $request->data['date_start'];
+        $userRequest->date_end = $request->data['date_end'];
+        $requestId = $userRequest->save();
+
         return json_encode($requestId);
     }
 
-    public function update(int $id)
+    public function update(int $id, UpdateUserRequest $request)
     {
-        $httpRequest = HttpRequest::getInstance();
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $request = $request->getById($id);
-        if ($request->user_id != $currentUser::$id) {
+
+        $userRequest = new UserRequest;
+        $userRequest = $userRequest->getById($id);
+        if ($userRequest->user_id != $currentUser::$id) {
             throw new \Exception('Permission denied');
         }
-        if (!empty($httpRequest->data['date_start'])) {
-            $request->date_start = $httpRequest->data['date_start'];
-        }
-        if (!empty($httpRequest->data['date_end'])) {
-            $request->date_end = $httpRequest->data['date_end'];
-        }
-        $request->status = 'pending';
-        $request = $request->save();
-        return json_encode($request);
+
+        $userRequest->date_start = $request->data['date_start'];
+        $userRequest->date_end = $request->data['date_end'];
+        $userRequest->status = 'pending';
+        $userRequest = $userRequest->save();
+
+        return json_encode($userRequest);
     }
 
     public function destroy($id)
     {
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $request = $request->getById($id);
-        if ($request->user_id != $currentUser::$id) {
+
+        $userRequest = new UserRequest;
+        $userRequest = $userRequest->getById($id);
+        if ($userRequest->user_id != $currentUser::$id) {
             throw new \Exception('Permission denied');
         }
-        $request->delete();
+        $userRequest->delete();
+
         return json_encode(true);
     }
 
     public function approve($id)
     {
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $request = $request->getById($id);
+
+        $userRequest = new UserRequest;
+        $userRequest = $userRequest->getById($id);
         if (!$currentUser::$is_admin) {
             throw new \Exception('Permission denied');
         }
-        $request->status = 'approved';
-        $request = $request->save();
-        return json_encode($request);
+        $userRequest->status = 'approved';
+        $userRequest = $userRequest->save();
+
+        return json_encode($userRequest);
     }
 
     public function reject($id)
     {
         $currentUser = CurrentUser::getInstance();
-        $request = new Request;
-        $request = $request->getById($id);
+
+        $userRequest = new UserRequest;
+        $userRequest = $userRequest->getById($id);
         if (!$currentUser::$is_admin) {
             throw new \Exception('Permission denied');
         }
-        $request->status = 'rejected';
-        $request = $request->save();
-        return json_encode($request);
+        $userRequest->status = 'rejected';
+        $userRequest = $userRequest->save();
+
+        return json_encode($userRequest);
     }
 }
