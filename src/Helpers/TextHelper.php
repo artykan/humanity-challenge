@@ -2,7 +2,7 @@
 
 namespace Helpers;
 
-class Text
+class TextHelper
 {
     public static function toCamelCase($string)
     {
