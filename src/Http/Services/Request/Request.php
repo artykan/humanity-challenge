@@ -2,29 +2,30 @@
 
 namespace Http\Services\Request;
 
-use Helpers\Text;
+use Helpers\TextHelper;
+use Http\Services\Auth\Authentication;
 
 class Request implements RequestInterface
 {
-    private static $instance = null;
+    public $data;
 
-    private function __construct()
+    public function __construct(Authentication $auth)
     {
+        $auth->perform();
         $this->bootstrap();
+        $this->validate();
     }
 
-    private function __clone()
+
+    public function validate()
     {
+        return true;
     }
 
-    private function __wakeup()
-    {
-    }
-
-    private function bootstrap()
+    protected function bootstrap()
     {
         foreach ($_SERVER as $key => $value) {
-            $this->{Text::toLowerCamelCase($key)} = $value;
+            $this->{TextHelper::toLowerCamelCase($key)} = $value;
         }
 
         $data = [];
@@ -33,13 +34,5 @@ class Request implements RequestInterface
         foreach ($data as $key => $value) {
             $this->data[$key] = $value;
         }
-    }
-
-    public static function getInstance()
-    {
-        return
-            self::$instance === null
-                ? self::$instance = new static()
-                : self::$instance;
     }
 }

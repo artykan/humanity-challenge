@@ -2,16 +2,17 @@
 
 namespace Http\Services\Routing;
 
-use Helpers\Text;
-use Http\Services\Auth\Authentication;
+use Helpers\TextHelper;
 use Http\Services\Request\RequestInterface;
+use Http\Services\Auth\Authentication;
 
 class Router implements RouterInterface
 {
-    private $request;
-    private $route;
-    private $method;
-    private $controller;
+    protected $request;
+    protected $route;
+    protected $method;
+    protected $controller;
+    protected $routeParams;
 
     /**
      * Router constructor.
@@ -25,6 +26,30 @@ class Router implements RouterInterface
         $this->setRoute();
         $this->setMethod();
         $this->setController();
+        $this->setRouteParams();
+    }
+
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    public function dispatch()
+    {
+        $controller = $this->controller;
+
+        if (!class_exists($controller['class_name_full'])) {
+            throw new \Exception('Controller doesn\'t exist');
+        }
+
+        if (!method_exists($controller['class_name_full'], $controller['class_method'])) {
+            throw new \Exception('Controller method doesn\'t exist');
+        }
+
+        return call_user_func_array(
+            [new $controller['class_name_full'], $controller['class_method']],
+            $this->parseControllerMethodParams()
+        );
     }
 
     private function setRoute()
@@ -80,7 +105,7 @@ class Router implements RouterInterface
             $action = $routeArray[3] ?? '';
         }
 
-        $controller['class_name_short'] = Text::toCamelCase(urldecode($routeArray[1])) . 'Controller';
+        $controller['class_name_short'] = TextHelper::toCamelCase(urldecode($routeArray[1])) . 'Controller';
         $controller['class_name_full'] = '\Http\Controllers\\' . $controller['class_name_short'];
 
         switch ($this->method) {
@@ -106,43 +131,41 @@ class Router implements RouterInterface
         $this->controller = $controller;
     }
 
-    public function getController()
+    protected function setRouteParams()
     {
-        return $this->controller;
-    }
-
-    public function parseArgs()
-    {
-        $args = [];
+        $params = [];
         $routeArray = explode('/', $this->route);
         $param2 = $routeArray[2] ?? '';
 
         if (is_numeric($param2)) {
-            $args['id'] = $param2;
+            $params['id'] = $param2;
         } else {
             for ($i = 3; $i < count($routeArray); $i++) {
-                $args[$routeArray[$i]] = $routeArray[$i + 1] ?? '';
+                $params[$routeArray[$i]] = $routeArray[$i + 1] ?? '';
                 $i++;
             }
         }
-        return $args;
+
+        $this->routeParams = $params;
     }
 
-    public function dispatch()
+    protected function parseControllerMethodParams()
     {
         $controller = $this->controller;
-
-        if (!class_exists($controller['class_name_full'])) {
-            throw new \Exception('Controller doesn\'t exist');
+        $controllerClassReflection = new \ReflectionClass($controller['class_name_full']);
+        $controllerClassMethodParameters = $controllerClassReflection->getMethod($controller['class_method'])->getParameters();
+        $controllerClassMethodParametersPrepared = [];
+        foreach ($controllerClassMethodParameters as $parameter) {
+            $parameterName = $parameter->getName();
+            $parameterType = $parameter->getType();
+            $parameterValue = $parameterType ? $parameterType->getName() : null;
+            if (class_exists($parameterValue)) {
+                $controllerClassMethodParametersPrepared[$parameterName] = new $parameterValue(new Authentication);
+            } else {
+                $controllerClassMethodParametersPrepared[$parameterName] = $this->routeParams[$parameterName];
+            }
         }
 
-        if (!method_exists($controller['class_name_full'], $controller['class_method'])) {
-            throw new \Exception('Controller method doesn\'t exist');
-        }
-
-        return call_user_func_array(
-            [new $controller['class_name_full'](new Authentication($this->request)), $controller['class_method']],
-            $this->parseArgs()
-        );
+        return $controllerClassMethodParametersPrepared;
     }
 }
