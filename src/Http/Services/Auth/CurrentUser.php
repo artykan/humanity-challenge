@@ -7,7 +7,7 @@ use Models\User;
 /**
  * Class CurrentUser
  */
-class CurrentUser implements CurrentUserInterface
+class CurrentUser
 {
     public static $id;
     public static $email;
