@@ -11,7 +11,7 @@ docker-compose up -d
 docker exec -it humanity_challenge_php bash -c 'composer install'
 ```
 
-phpMyAdmin can be accessed here:
+phpMyAdmin can be accessed here (user: user, password: secret):
 ```
 http://humanity.challenge.docker:8001
 ```
