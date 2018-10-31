@@ -98,4 +98,16 @@ class UserRequestsController extends Controller
 
         return json_encode($userRequest);
     }
+
+    public function remainder($year = '')
+    {
+        $year = empty($year) ? date('Y') : $year;
+
+        $currentUser = CurrentUser::getInstance();
+
+        $userRequest = new UserRequest;
+        $remainder = $userRequest->remainder($currentUser::$id, $year);
+
+        return json_encode($remainder);
+    }
 }

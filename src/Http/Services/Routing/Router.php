@@ -166,7 +166,7 @@ class Router implements RouterInterface
             if (class_exists($parameterValue)) {
                 $controllerClassMethodParametersPrepared[$parameterName] = new $parameterValue;
             } else {
-                $controllerClassMethodParametersPrepared[$parameterName] = $this->routeParams[$parameterName];
+                $controllerClassMethodParametersPrepared[$parameterName] = $this->routeParams[$parameterName] ?? '';
             }
         }
 
