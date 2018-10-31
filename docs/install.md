@@ -35,7 +35,7 @@ Nonce is just a random number.
 Digest should be generated. For example you may use this PHP code to generate:
 ```
 $method = 'GET';
-$uri = '/user-requests'
+$uri = '/user-requests';
 $nonce = 98765; // random number
 $secret = 'kY73BD*l^&'; // the same string as in /config/app.php
 $digestData = $method . '+' . $uri . '+' . $nonce;
@@ -47,20 +47,54 @@ The authentication is simplified - there is no checking of nonce uniqueness rega
 
 ## Testing Requests
 
+Create vacation request:
 ```
 curl -X POST -H 'Authentication: user@humanity.challenge.docker:98765:NzIwNDEzZj' -d 'date_start=2018-12-24&date_end=2019-01-10' humanity.challenge.docker/user-requests -v
-curl -X PUT -H 'Authentication: user@humanity.challenge.docker:98765:M2NiZWQxMj' -d 'date_start=2019-03-27&date_end=2019-03-29' humanity.challenge.docker/user-requests/1 -v
-curl -X POST -H 'Authentication: admin@humanity.challenge.docker:98765:NDRmYTJkZj' humanity.challenge.docker/user-requests/1/approve -v
-curl -X POST -H 'Authentication: admin@humanity.challenge.docker:98765:ZmIxOWQzNm' humanity.challenge.docker/user-requests/1/reject -v
-curl -X DELETE -H 'Authentication: user@humanity.challenge.docker:98765:N2RiNjU2Nj' humanity.challenge.docker/user-requests/1 -v
+```
+
+Get own vacation requests:
+```
+curl -X GET -H 'Authentication: user@humanity.challenge.docker:98765:MGQzNWQ5Nz' humanity.challenge.docker/user-requests -v
+```
+
+Get all vacation requests (for admin users only):
+```
 curl -X GET -H 'Authentication: admin@humanity.challenge.docker:98765:MGQzNWQ5Nz' humanity.challenge.docker/user-requests -v
+```
+
+Update vacation request:
+```
+curl -X PUT -H 'Authentication: user@humanity.challenge.docker:98765:M2NiZWQxMj' -d 'date_start=2018-12-22&date_end=2019-01-10' humanity.challenge.docker/user-requests/1 -v
+```
+
+Delete vacation request:
+```
+curl -X DELETE -H 'Authentication: user@humanity.challenge.docker:98765:N2RiNjU2Nj' humanity.challenge.docker/user-requests/1 -v
+```
+
+Approve vacation request (for admin users only):
+```
+curl -X POST -H 'Authentication: admin@humanity.challenge.docker:98765:NDRmYTJkZj' humanity.challenge.docker/user-requests/1/approve -v
+```
+
+Reject vacation request (for admin users only):
+```
+curl -X POST -H 'Authentication: admin@humanity.challenge.docker:98765:ZmIxOWQzNm' humanity.challenge.docker/user-requests/1/reject -v
+```
+
+Get vacation remainder in current year: 
+```
 curl -X GET -H 'Authentication: user@humanity.challenge.docker:98765:ODU5MzA5Ym' humanity.challenge.docker/user-requests/remainder -v
+```
+
+Get vacation remainder in a particular year: 
+```
 curl -X GET -H 'Authentication: user@humanity.challenge.docker:98765:MWQzOTI1OT' humanity.challenge.docker/user-requests/remainder/year/2019 -v
 ```
 
 ## Unit Tests
 
-There are a few unit test and they can be run with: 
+There are a few unit tests and they can be run with: 
 ```
 docker exec -it humanity_challenge_php bash -c 'vendor/bin/phpunit'
 ```
