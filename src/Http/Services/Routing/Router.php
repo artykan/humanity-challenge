@@ -5,6 +5,9 @@ namespace Http\Services\Routing;
 use Helpers\TextHelper;
 use Http\Services\Request\RequestInterface;
 
+/**
+ * Class Router
+ */
 class Router implements RouterInterface
 {
     protected $request;
@@ -28,16 +31,26 @@ class Router implements RouterInterface
         $this->setRouteParams();
     }
 
+    /**
+     * @return mixed
+     */
     public function getController()
     {
         return $this->controller;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRouteParams()
     {
         return $this->routeParams;
     }
 
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function dispatch()
     {
         $controller = $this->controller;
@@ -56,6 +69,9 @@ class Router implements RouterInterface
         );
     }
 
+    /**
+     * @throws \Exception
+     */
     private function setRoute()
     {
         if (!isset($this->request->requestUri)) {
@@ -78,6 +94,9 @@ class Router implements RouterInterface
         $this->route = $route;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function setMethod()
     {
         if (!isset($this->request->requestMethod)) {
@@ -153,6 +172,11 @@ class Router implements RouterInterface
         $this->routeParams = $params;
     }
 
+    /**
+     * Detects what dependencies has Controller method and injects them to it
+     * @return array
+     * @throws \ReflectionException
+     */
     protected function parseControllerMethodParams()
     {
         $controller = $this->controller;

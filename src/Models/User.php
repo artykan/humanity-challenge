@@ -2,6 +2,9 @@
 
 namespace Models;
 
+/**
+ * Class User
+ */
 class User extends Model
 {
     const TABLE_NAME = 'users';
@@ -10,6 +13,11 @@ class User extends Model
     public $email;
     public $is_admin;
 
+    /**
+     * @param $email
+     * @return mixed
+     * @throws \Exception
+     */
     public function getByEmail($email)
     {
         $sql = 'SELECT * FROM ' . self::TABLE_NAME . ' WHERE email = :email';

@@ -5,8 +5,15 @@ namespace Http\Requests;
 use Helpers\DateHelper;
 use Http\Services\Request\Request;
 
+/**
+ * Class UserRequest
+ */
 class UserRequest extends Request
 {
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public function validate()
     {
         if (empty($this->data['date_start'])) {

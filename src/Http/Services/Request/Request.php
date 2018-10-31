@@ -4,6 +4,9 @@ namespace Http\Services\Request;
 
 use Helpers\TextHelper;
 
+/**
+ * Class Request
+ */
 class Request implements RequestInterface
 {
     public $data;
@@ -15,11 +18,17 @@ class Request implements RequestInterface
     }
 
 
+    /**
+     * @return bool
+     */
     public function validate()
     {
         return true;
     }
 
+    /**
+     * Populate Request object
+     */
     protected function bootstrap()
     {
         foreach ($_SERVER as $key => $value) {
@@ -27,6 +36,8 @@ class Request implements RequestInterface
         }
 
         $data = [];
+
+        // GET, POST, PUT/PATCH, DELETE data
         parse_str(file_get_contents('php://input'), $data);
 
         foreach ($data as $key => $value) {

@@ -5,6 +5,9 @@ namespace HumanityChallenge\Helpers;
 use Helpers\DateHelper;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class DateHelperTest
+ */
 class DateHelperTest extends TestCase
 {
     /**

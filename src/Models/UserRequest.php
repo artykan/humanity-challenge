@@ -4,6 +4,9 @@ namespace Models;
 
 use Helpers\DateHelper;
 
+/**
+ * Class UserRequest
+ */
 class UserRequest extends Model
 {
     const TABLE_NAME = 'user_requests';
@@ -14,6 +17,10 @@ class UserRequest extends Model
     public $date_end;
     public $status;
 
+    /**
+     * @param $userId
+     * @return array
+     */
     public function allByUserId($userId)
     {
         $sql = 'SELECT * FROM ' . self::TABLE_NAME . ' WHERE user_id = :user_id';
@@ -23,6 +30,11 @@ class UserRequest extends Model
         return $items;
     }
 
+    /**
+     * @param $userId
+     * @param $year
+     * @return array
+     */
     public function approvedByUserIdAndYear($userId, $year)
     {
         $sql = 'SELECT * FROM ' . self::TABLE_NAME
@@ -38,6 +50,9 @@ class UserRequest extends Model
         return $items;
     }
 
+    /**
+     * @return $this|string
+     */
     public function save()
     {
         if (!empty($this->id)) {
@@ -64,6 +79,11 @@ class UserRequest extends Model
         }
     }
 
+    /**
+     * @param $userId
+     * @param $year
+     * @return float|int|mixed
+     */
     public function remainder($userId, $year)
     {
         $approvedDaysCount = 0;

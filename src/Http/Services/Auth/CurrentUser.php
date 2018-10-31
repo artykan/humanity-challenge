@@ -4,6 +4,9 @@ namespace Http\Services\Auth;
 
 use Models\User;
 
+/**
+ * Class CurrentUser
+ */
 class CurrentUser implements CurrentUserInterface
 {
     public static $id;
@@ -12,6 +15,10 @@ class CurrentUser implements CurrentUserInterface
 
     private static $instance = null;
 
+    /**
+     * CurrentUser constructor.
+     * @param User|null $user
+     */
     private function __construct(User $user = null)
     {
         if (!is_null($user)) {
@@ -29,6 +36,10 @@ class CurrentUser implements CurrentUserInterface
     {
     }
 
+    /**
+     * @param User|null $user
+     * @return CurrentUser|null
+     */
     public static function getInstance(User $user = null)
     {
         return

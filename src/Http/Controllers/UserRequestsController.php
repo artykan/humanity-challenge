@@ -7,8 +7,14 @@ use Http\Requests\UpdateUserRequest;
 use Http\Services\Auth\CurrentUser;
 use Models\UserRequest;
 
+/**
+ * Class UserRequestsController
+ */
 class UserRequestsController extends Controller
 {
+    /**
+     * @return string
+     */
     public function index()
     {
         $currentUser = CurrentUser::getInstance();
@@ -24,6 +30,10 @@ class UserRequestsController extends Controller
         return json_encode($userRequests);
     }
 
+    /**
+     * @param StoreUserRequest $request
+     * @return string
+     */
     public function store(StoreUserRequest $request)
     {
         $currentUser = CurrentUser::getInstance();
@@ -37,6 +47,12 @@ class UserRequestsController extends Controller
         return json_encode($requestId);
     }
 
+    /**
+     * @param int $id
+     * @param UpdateUserRequest $request
+     * @return string
+     * @throws \Exception
+     */
     public function update(int $id, UpdateUserRequest $request)
     {
         $currentUser = CurrentUser::getInstance();
@@ -55,6 +71,11 @@ class UserRequestsController extends Controller
         return json_encode($userRequest);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws \Exception
+     */
     public function destroy($id)
     {
         $currentUser = CurrentUser::getInstance();
@@ -69,6 +90,11 @@ class UserRequestsController extends Controller
         return json_encode(true);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws \Exception
+     */
     public function approve($id)
     {
         $currentUser = CurrentUser::getInstance();
@@ -84,6 +110,11 @@ class UserRequestsController extends Controller
         return json_encode($userRequest);
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws \Exception
+     */
     public function reject($id)
     {
         $currentUser = CurrentUser::getInstance();
@@ -99,6 +130,10 @@ class UserRequestsController extends Controller
         return json_encode($userRequest);
     }
 
+    /**
+     * @param string $year
+     * @return string
+     */
     public function remainder($year = '')
     {
         $year = empty($year) ? date('Y') : $year;

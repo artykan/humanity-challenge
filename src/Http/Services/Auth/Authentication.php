@@ -5,6 +5,9 @@ namespace Http\Services\Auth;
 use Http\Services\Request\RequestInterface;
 use Models\User;
 
+/**
+ * Class Authentication
+ */
 class Authentication implements AuthenticationInterface
 {
     private $request;
@@ -12,6 +15,11 @@ class Authentication implements AuthenticationInterface
     private $digest;
     private $nonce;
 
+    /**
+     * Authentication constructor.
+     * @param RequestInterface $request
+     * @throws \Exception
+     */
     public function __construct(RequestInterface $request)
     {
         $this->request = $request;
@@ -41,6 +49,10 @@ class Authentication implements AuthenticationInterface
         $this->digest = $httpAuthenticationArray[2];
     }
 
+    /**
+     * @param $secret
+     * @return bool|string
+     */
     public function reconstructDigest($secret)
     {
         $digestData = $this->request->requestMethod . '+' . $this->request->requestUri . '+' . $this->nonce;
@@ -49,6 +61,10 @@ class Authentication implements AuthenticationInterface
         return $digest;
     }
 
+    /**
+     * @return bool
+     * @throws \Exception
+     */
     public function perform()
     {
         $digest = $this->reconstructDigest(\Config::get('AUTH_HMAC_SECRET'));

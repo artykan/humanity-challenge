@@ -2,14 +2,27 @@
 
 namespace Helpers;
 
+/**
+ * Class DateHelper
+ */
 class DateHelper
 {
+    /**
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
     public static function isCorrectDate($date, $format = 'Y-m-d')
     {
         $d = \DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
     }
 
+    /**
+     * @param $start
+     * @param $end
+     * @return bool
+     */
     public static function isEndGreatedThanStart($start, $end)
     {
         $start = new \DateTime(trim($start));
@@ -18,6 +31,12 @@ class DateHelper
         return $interval->invert ? true : false;
     }
 
+    /**
+     * @param $start
+     * @param $end
+     * @param array $holidays
+     * @return float|int
+     */
     public static function getWorkingDaysCount($start, $end, array $holidays = [])
     {
         $end = strtotime($end);
