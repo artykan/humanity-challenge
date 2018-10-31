@@ -4,19 +4,19 @@ Add an entry `127.0.0.1 humanity.challenge.docker` to your `/etc/hosts` file:
 ```sh
 sudo echo '127.0.0.1 humanity.challenge.docker' >> /etc/hosts
 ```
-Run from the following from the project root:
+Run the following from the project root:
 ```
 docker-compose build
 docker-compose up -d
 docker exec -it humanity_challenge_php bash -c 'composer install'
 ```
 
+Composer install command will create a configuration skeleton file for you here `/config/app.php`.
+
 phpMyAdmin can be accessed here (user: user, password: secret):
 ```
 http://humanity.challenge.docker:8001
 ```
-
-Composer install command will create a configuration skeleton file for you here `/config/app.php`.
 
 ## Authentication
 
@@ -32,7 +32,7 @@ curl -X GET -H 'Authentication: admin@humanity.challenge.docker:98765:MGQzNWQ5Nz
 
 Nonce is just a random number.
 
-Digest should be generated. For example you may use this PHP code to generate:
+Digest must be generated. For example you may use this PHP code to generate:
 ```
 $method = 'GET';
 $uri = '/user-requests';
