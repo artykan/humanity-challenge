@@ -6,4 +6,4 @@ Authentication is done using HMAC approach. But it's simplified to make testing 
 
 ## Installation and usage Docs
 Please read the following docs:
-- [Starting the environment](docs/install.md)
+- [Installing and running](docs/install.md)
