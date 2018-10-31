@@ -4,7 +4,6 @@ namespace Http\Services\Routing;
 
 use Helpers\TextHelper;
 use Http\Services\Request\RequestInterface;
-use Http\Services\Auth\Authentication;
 
 class Router implements RouterInterface
 {
@@ -32,6 +31,11 @@ class Router implements RouterInterface
     public function getController()
     {
         return $this->controller;
+    }
+
+    public function getRouteParams()
+    {
+        return $this->routeParams;
     }
 
     public function dispatch()
@@ -160,7 +164,7 @@ class Router implements RouterInterface
             $parameterType = $parameter->getType();
             $parameterValue = $parameterType ? $parameterType->getName() : null;
             if (class_exists($parameterValue)) {
-                $controllerClassMethodParametersPrepared[$parameterName] = new $parameterValue(new Authentication);
+                $controllerClassMethodParametersPrepared[$parameterName] = new $parameterValue;
             } else {
                 $controllerClassMethodParametersPrepared[$parameterName] = $this->routeParams[$parameterName];
             }

@@ -3,15 +3,13 @@
 namespace Http\Services\Request;
 
 use Helpers\TextHelper;
-use Http\Services\Auth\Authentication;
 
 class Request implements RequestInterface
 {
     public $data;
 
-    public function __construct(Authentication $auth)
+    public function __construct()
     {
-        $auth->perform();
         $this->bootstrap();
         $this->validate();
     }

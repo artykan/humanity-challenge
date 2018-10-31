@@ -2,21 +2,25 @@
 
 namespace Http\Services\Auth;
 
+use Http\Services\Request\RequestInterface;
 use Models\User;
 
 class Authentication implements AuthenticationInterface
 {
+    private $request;
     private $email;
     private $digest;
     private $nonce;
 
-    public function __construct()
+    public function __construct(RequestInterface $request)
     {
-        if (!isset($_SERVER['HTTP_AUTHENTICATION'])) {
+        $this->request = $request;
+
+        if (!isset($this->request->httpAuthentication)) {
             throw new \Exception('Authentication header is not set');
         }
 
-        $httpAuthenticationArray = explode(':', $_SERVER['HTTP_AUTHENTICATION']);
+        $httpAuthenticationArray = explode(':', $this->request->httpAuthentication);
 
         if (!isset($httpAuthenticationArray[0])) {
             throw new \Exception('Authentication header email is not set');
@@ -37,10 +41,17 @@ class Authentication implements AuthenticationInterface
         $this->digest = $httpAuthenticationArray[2];
     }
 
+    public function reconstructDigest($secret)
+    {
+        $digestData = $this->request->requestMethod . '+' . $this->request->requestUri . '+' . $this->nonce;
+        $digest = substr(base64_encode(hash_hmac('sha256', $digestData, $secret)), 0, 10);
+
+        return $digest;
+    }
+
     public function perform()
     {
-        $digestData = $_SERVER['REQUEST_METHOD'] . '+' . $_SERVER['REQUEST_URI'] . '+' . $this->nonce;
-        $digest = substr(base64_encode(hash_hmac('sha256', $digestData, \Config::get('AUTH_HMAC_SECRET'))), 0, 10);
+        $digest = $this->reconstructDigest(\Config::get('AUTH_HMAC_SECRET'));
 
         if ($digest != $this->digest) {
             throw new \Exception('Authentication failed');

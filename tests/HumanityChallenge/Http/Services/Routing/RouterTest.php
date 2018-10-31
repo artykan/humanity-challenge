@@ -17,7 +17,7 @@ class RouterTest extends TestCase
     public function testReturnsExceptionIfRequestIsEmpty()
     {
         $this->expectException(\Exception::class);
-        new Router(Request::getInstance());
+        new Router(new Request);
     }
 
     /**
@@ -25,7 +25,7 @@ class RouterTest extends TestCase
      */
     public function testDetectsControllerClassAndMethodCorrectly()
     {
-        $request = Request::getInstance();
+        $request = new Request;
 
         $request->requestUri = '/users/5';
         $request->requestMethod = 'PATCH';
@@ -58,6 +58,6 @@ class RouterTest extends TestCase
         $controller = $router->getController();
         $this->assertEquals('UsersController', $controller['class_name_short']);
         $this->assertEquals('export', $controller['class_method']);
-        $this->assertEquals('csv', $router->parseArgs()['type']);
+        $this->assertEquals('csv', $router->getRouteParams()['type']);
     }
 }
