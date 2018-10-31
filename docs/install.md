@@ -2,13 +2,13 @@
 
 Add an entry `127.0.0.1 humanity.challenge.docker` to your `/etc/hosts` file:
 ```sh
-sudo echo "127.0.0.1 humanity.challenge.docker" >> /etc/hosts
+sudo echo '127.0.0.1 humanity.challenge.docker' >> /etc/hosts
 ```
 Run from the following from the project root:
 ```
 docker-compose build
 docker-compose up -d
-docker exec -it humanity_challenge_php bash -c "composer install"
+docker exec -it humanity_challenge_php bash -c 'composer install'
 ```
 
 Composer install command will create a configuration skeleton file for you here `/config/app.php`.
@@ -57,9 +57,9 @@ curl -X GET -H 'Authentication: user@humanity.challenge.docker:98765:MWQzOTI1OT'
 
 There are a few unit test and they can be run with: 
 ```
-docker exec -it humanity_challenge_php bash -c "vendor/bin/phpunit"
+docker exec -it humanity_challenge_php bash -c 'vendor/bin/phpunit'
 ```
 or
 ```
-docker exec -it humanity_challenge_php bash -c "vendor/bin/phpunit --testdox"
+docker exec -it humanity_challenge_php bash -c 'vendor/bin/phpunit --testdox'
 ```
