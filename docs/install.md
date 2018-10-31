@@ -55,7 +55,7 @@ curl -X GET -H 'Authentication: user@humanity.challenge.docker:98765:MWQzOTI1OT'
 
 ## Unit Tests
 
-Tests can be run with: 
+There are a few unit test and they can be run with: 
 ```
 docker exec -it humanity_challenge_php bash -c "vendor/bin/phpunit"
 ```
