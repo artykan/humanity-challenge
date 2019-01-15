@@ -19,6 +19,9 @@
         "phpunit/phpunit": "^6.5"
     },
     "scripts": {
+        "post-install-cmd": [
+            "php -r \"file_exists('./config/app.php') || copy('./config/app.example.php', './config/app.php');\""
+        ],
         "post-update-cmd": [
             "php -r \"file_exists('./config/app.php') || copy('./config/app.example.php', './config/app.php');\""
         ]
